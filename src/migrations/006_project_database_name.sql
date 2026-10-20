@@ -1,0 +1,1 @@
+ALTER TABLE projects ADD COLUMN database_name VARCHAR(100) NULL;

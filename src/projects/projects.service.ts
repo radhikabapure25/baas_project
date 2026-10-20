@@ -1,3 +1,5 @@
+import { ProvisioningService } from '../provisioning/provisioning.service';
+import { DatabaseService } from '../database/database.service';
 import {
   ForbiddenException,
   Injectable,
@@ -31,7 +33,11 @@ export function toPublicProject(p: ProjectRow) {
 
 @Injectable()
 export class ProjectsService {
-  constructor(private readonly repo: ProjectsRepository) {}
+  constructor(
+    private readonly repo: ProjectsRepository,
+    private readonly provisioning: ProvisioningService,
+    private readonly db: DatabaseService,
+  ) {}
 
   async create(userId: string, dto: CreateProjectDto) {
     const id = randomUUID();
@@ -42,6 +48,8 @@ export class ProjectsService {
       slug,
       ownerId: userId,
     });
+    const dbName = await this.provisioning.createProjectDatabase(id);
+    await this.db.query('UPDATE projects SET database_name = ? WHERE id = ?', [dbName, id]);
     return this.get(userId, id);
   }
 
