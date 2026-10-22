@@ -1,3 +1,4 @@
+import { ProvisioningModule } from './provisioning/provisioning.module';
 import { AuditModule } from './audit/audit.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
@@ -18,6 +19,7 @@ import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
+    ProvisioningModule,
     AuditModule,
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
